@@ -1,5 +1,7 @@
+agendaApp
 agendaApp/node_modules/
 agendaApp/.env
 BlogList/node_modules/
 BlogList/.env
+BlogList/.env.test
 agendaApp/pruebas_ejercicios/

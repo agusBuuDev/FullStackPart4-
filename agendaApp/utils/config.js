@@ -6,9 +6,8 @@ const password = process.env.DB_MONGO_PASS
 const uri = process.env.DB_MONGO_URI
 const uri_test=process.env.DB_MONGO_URI_TEST
 
-const MONGO_URI =process.env.NODE_ENV === 'test' 
-? `mongodb+srv://${user}:${password}${uri}`
-: `mongodb+srv://${user}:${password}${uri_test}`
+const MONGO_URI =`mongodb+srv://${user}:${password}${uri}`
+
 
 module.exports = {
 

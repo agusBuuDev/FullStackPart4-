@@ -4,30 +4,21 @@ const logger = require ('../utils/logger')
 
 
 //traer todos
-blogRouter.get('/', (request, response) => {
-    Blog.find({})
-      .then(blogs => {
-        response.json(blogs)
+blogRouter.get('/', async (request, response) => {
+    const blogs= await Blog.find({})
+    response.json(blogs)
     })
-  })
+  
 
   //taer 1 por id
-  blogRouter.get('/:id', (request, response, next) => {
-    Blog.findById(request.params.id).then(blog => {
-      if(blog){
-        response.json(blog)
-      }else{
-        response.status(404).end()
-      }
-      
-    })
-    .catch(error => next(error))
+  blogRouter.get('/:id', async (request, response) => {
+    const blog= await Blog.findById(request.params.id)
+    response.json(blog)      
   })
 
   //agregar  
-  blogRouter.post('/', (request, response, next) => {
+  blogRouter.post('/', async (request, response, next) => {
     const body = request.body
-   
     if (body.title === undefined || body.title==='') {
       return response.status(400).json({ error: 'content missing' })
     }
@@ -36,38 +27,28 @@ blogRouter.get('/', (request, response) => {
         title: body.title,
         author: body.author,
         url: body.url,
-        likes: body.likes
+        likes: body.likes?body.likes:0
       }
       ) 
     
-     blog.save().then(savedBlog => {
+     const savedBlog= await blog.save()
         response.json(savedBlog)
         logger.info('Blog Saved')
-    })
-    .catch(error => next(error))
-   
-    })
+      })
 
     //delate
   
-    blogRouter.delete('/:id', (request, response, next) => {
-      
-      Blog.findByIdAndDelete(request.params.id )
-        .then(result => {
-          response.status(204).end()
-        })
-        .catch(error => next(error))
+    blogRouter.delete('/:id', async (request, response) => {
+      await Blog.findByIdAndDelete(request.params.id )
+      response.status(204).end()        
     })
   
 
   //update
-  blogRouter.put('/:id', (request, response, next) => {
+  blogRouter.put('/:id', async (request, response) => {
     const {title, author, url, likes} = request.body
-       
-    Blog.findByIdAndUpdate(request.params.id, {title, author, url, likes}, { new: true, runValidators: true, context: 'query' })
-      .then(updatedBlog => {
-        response.json(updatedBlog)
-      })
-      .catch(error => next(error))
+    updatedBlog= await Blog.findByIdAndUpdate(request.params.id, {title, author, url, likes}, { new: true, runValidators: true, context: 'query' })
+    response.json(updatedBlog)
   })
+      
   module.exports = blogRouter
